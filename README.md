@@ -18,5 +18,5 @@ In a Github Actions workflow:
         docker run --rm ghcr.io/juliengriffoul/discord-cli:latest \
           -t "${{ secrets.DISCORD_TOKEN }}" \
           -c ${{ env.DISCORD_CHANNEL }} \
-          -m "Successfully build ${{ github.repository }}."
+          -m "Successfully built ${{ github.repository }}."
 ```
