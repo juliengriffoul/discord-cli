@@ -12,12 +12,19 @@ var (
 	Token     string
 	ChannelID string
 	Message   string
+	Failure   bool
+)
+
+const (
+	Red   = 0xFF0000
+	Green = 0x00FF00
 )
 
 func init() {
 	flag.StringVar(&Token, "t", "", "Bot Token")
 	flag.StringVar(&ChannelID, "c", "", "Channel ID")
 	flag.StringVar(&Message, "m", "", "Message")
+	flag.BoolVar(&Failure, "f", false, "Is a failure message?")
 	flag.Parse()
 }
 
@@ -36,7 +43,21 @@ func main() {
 
 	defer dg.Close()
 
-	_, err = dg.ChannelMessageSend(ChannelID, Message)
+	embed := &discordgo.MessageEmbed{
+		Title:       "Success",
+		Description: Message,
+		Color:       Green,
+	}
+
+	if Failure {
+		embed = &discordgo.MessageEmbed{
+			Title:       "Failure",
+			Description: Message,
+			Color:       Red,
+		}
+	}
+
+	_, err = dg.ChannelMessageSendEmbed(ChannelID, embed)
 	if err != nil {
 		log.Fatalf("Error sending message: %v", err)
 		return
